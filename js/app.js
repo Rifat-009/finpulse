@@ -321,7 +321,7 @@ function renderHealthGauge(id, score) {
     else if(score < 80) color = Colors.warning;
     
     circle.style.stroke = color;
-    setTimeout(() => { circle.style.strokeDasharray = \`\${circ - offset} \${circ}\`; }, 100);
+    setTimeout(() => { circle.style.strokeDasharray = `${circ - offset} ${circ}`; }, 100);
 }
 
 // --- Views ---
@@ -336,40 +336,40 @@ const Views = {
         let txHtml = AppState.budget.transactions.slice(-4).reverse().map(t => {
             const cat = Categories[t.category] || Categories.other;
             const isInc = t.type === 'in';
-            return \`
+            return `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-light)">
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:40px; height:40px; border-radius:10px; background:\${isInc ? Colors.success+'15' : cat.color+'15'}; display:flex; align-items:center; justify-content:center; color:\${isInc ? Colors.success : cat.color}">
-                        <i class="fas \${cat.icon}"></i>
+                    <div style="width:40px; height:40px; border-radius:10px; background:${isInc ? Colors.success+'15' : cat.color+'15'}; display:flex; align-items:center; justify-content:center; color:${isInc ? Colors.success : cat.color}">
+                        <i class="fas ${cat.icon}"></i>
                     </div>
-                    <div><div style="font-weight:600; font-size:14px">\${t.desc}</div><div style="font-size:12px; color:var(--text-muted)">\${cat.label} &middot; \${t.date}</div></div>
+                    <div><div style="font-weight:600; font-size:14px">${t.desc}</div><div style="font-size:12px; color:var(--text-muted)">${cat.label} &middot; ${t.date}</div></div>
                 </div>
-                <div style="font-weight:600; font-size:15px; color:\${isInc ? Colors.success : 'var(--text-primary)'}">\${isInc ? '+' : '-'}\${formatMoney(t.amount)}</div>
-            </div>\`;
+                <div style="font-weight:600; font-size:15px; color:${isInc ? Colors.success : 'var(--text-primary)'}">${isInc ? '+' : '-'}${formatMoney(t.amount)}</div>
+            </div>`;
         }).join('');
 
-        return \`
+        return `
         <div>
             <div class="grid-cols-4 stagger-1" style="margin-bottom: 24px;">
                 <div class="card stat-card sc-green cyber-glow">
                     <div class="sc-icon"><i class="fas fa-wallet"></i></div>
                     <div class="sc-label">Net Worth</div>
-                    <div class="sc-value">\${formatMoney(totalVal)}</div>
+                    <div class="sc-value">${formatMoney(totalVal)}</div>
                 </div>
                 <div class="card stat-card sc-blue cyber-glow">
                     <div class="sc-icon"><i class="fas fa-chart-line"></i></div>
                     <div class="sc-label">Investments</div>
-                    <div class="sc-value">\${formatMoney(cryptoVal + stockVal)}</div>
+                    <div class="sc-value">${formatMoney(cryptoVal + stockVal)}</div>
                 </div>
                 <div class="card stat-card sc-purple cyber-glow">
                     <div class="sc-icon"><i class="fas fa-credit-card"></i></div>
                     <div class="sc-label">Monthly Spent</div>
-                    <div class="sc-value">\${formatMoney(spent)}</div>
+                    <div class="sc-value">${formatMoney(spent)}</div>
                 </div>
                 <div class="card stat-card sc-orange cyber-glow" style="display:flex; align-items:center; justify-content:space-between; padding:20px">
                     <div>
                         <div class="sc-label">Health Score</div>
-                        <div class="sc-value">\${score}<span style="font-size:16px; color:var(--text-muted)">/100</span></div>
+                        <div class="sc-value">${score}<span style="font-size:16px; color:var(--text-muted)">/100</span></div>
                     </div>
                     <svg id="health-gauge" width="90" height="90" viewBox="0 0 100 100">
                         <circle class="score-circle-bg" cx="50" cy="50" r="40"></circle>
@@ -388,10 +388,10 @@ const Views = {
                         <h3 style="font-size: 16px;">Recent Transactions</h3>
                         <button class="btn btn-secondary" onclick="navigate('budget')" style="padding:6px 12px; font-size:12px">View All</button>
                     </div>
-                    \${txHtml || '<div style="padding:20px; text-align:center; color:var(--text-muted)">No transactions</div>'}
+                    ${txHtml || '<div style="padding:20px; text-align:center; color:var(--text-muted)">No transactions</div>'}
                 </div>
             </div>
-        </div>\`;
+        </div>`;
     },
     
     crypto: () => {
@@ -407,46 +407,46 @@ const Views = {
         
         let rows = data.map(c => {
             const isWl = AppState.watchlist.includes(c.id);
-            return \`
-            <tr onclick="showCryptoDetails('\${c.id}')">
-                <td style="width:40px" onclick="event.stopPropagation(); toggleWatchlist('\${c.id}')"><button class="btn-icon \${isWl ? 'active' : ''}"><i class="fas fa-star"></i></button></td>
-                <td><div style="display:flex; align-items:center; gap:12px"><img src="\${c.image}" style="width:28px; height:28px; border-radius:50%"><div><div style="font-weight:600">\${c.name}</div><div style="font-size:12px; color:var(--text-muted)">\${c.symbol.toUpperCase()}</div></div></div></td>
-                <td style="font-family:var(--font-heading); font-weight:600">\${formatMoney(c.current_price)}</td>
-                <td><span class="badge \${getChangeClass(c.price_change_percentage_24h)}">\${formatPercent(c.price_change_percentage_24h)}</span></td>
-                <td><span class="badge \${getChangeClass(c.price_change_percentage_7d_in_currency)}">\${formatPercent(c.price_change_percentage_7d_in_currency)}</span></td>
-                <td style="color:var(--text-muted)">\${formatCompact(c.market_cap)}</td>
-                <td><canvas id="sp-cr-\${c.id}" width="100" height="30" style="width:100px; height:30px"></canvas></td>
-            </tr>\`;
+            return `
+            <tr onclick="showCryptoDetails('${c.id}')">
+                <td style="width:40px" onclick="event.stopPropagation(); toggleWatchlist('${c.id}')"><button class="btn-icon ${isWl ? 'active' : ''}"><i class="fas fa-star"></i></button></td>
+                <td><div style="display:flex; align-items:center; gap:12px"><img src="${c.image}" style="width:28px; height:28px; border-radius:50%"><div><div style="font-weight:600">${c.name}</div><div style="font-size:12px; color:var(--text-muted)">${c.symbol.toUpperCase()}</div></div></div></td>
+                <td style="font-family:var(--font-heading); font-weight:600">${formatMoney(c.current_price)}</td>
+                <td><span class="badge ${getChangeClass(c.price_change_percentage_24h)}">${formatPercent(c.price_change_percentage_24h)}</span></td>
+                <td><span class="badge ${getChangeClass(c.price_change_percentage_7d_in_currency)}">${formatPercent(c.price_change_percentage_7d_in_currency)}</span></td>
+                <td style="color:var(--text-muted)">${formatCompact(c.market_cap)}</td>
+                <td><canvas id="sp-cr-${c.id}" width="100" height="30" style="width:100px; height:30px"></canvas></td>
+            </tr>`;
         }).join('');
 
-        return \`
+        return `
         <div class="stagger-1">
             <div class="card cyber-glow" style="margin-bottom:24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; padding:16px 24px">
-                <div style="position:relative; flex:1; min-width:200px"><i class="fas fa-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted)"></i><input type="text" class="input-field" placeholder="Search coins..." style="padding-left:40px" value="\${AppState.cryptoQuery}" oninput="AppState.cryptoQuery=this.value; renderView('crypto')"></div>
+                <div style="position:relative; flex:1; min-width:200px"><i class="fas fa-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted)"></i><input type="text" class="input-field" placeholder="Search coins..." style="padding-left:40px" value="${AppState.cryptoQuery}" oninput="AppState.cryptoQuery=this.value; renderView('crypto')"></div>
                 <select class="input-field" style="width:auto" onchange="AppState.cryptoSort=this.value; renderView('crypto')">
-                    <option value="mcap" \${AppState.cryptoSort==='mcap'?'selected':''}>Market Cap</option>
-                    <option value="pr" \${AppState.cryptoSort==='pr'?'selected':''}>Price</option>
-                    <option value="h24" \${AppState.cryptoSort==='h24'?'selected':''}>24h Change</option>
-                    <option value="wl" \${AppState.cryptoSort==='wl'?'selected':''}>Watchlist</option>
+                    <option value="mcap" ${AppState.cryptoSort==='mcap'?'selected':''}>Market Cap</option>
+                    <option value="pr" ${AppState.cryptoSort==='pr'?'selected':''}>Price</option>
+                    <option value="h24" ${AppState.cryptoSort==='h24'?'selected':''}>24h Change</option>
+                    <option value="wl" ${AppState.cryptoSort==='wl'?'selected':''}>Watchlist</option>
                 </select>
                 <button class="btn btn-primary" onclick="fetchCrypto(); renderView('crypto')"><i class="fas fa-sync-alt"></i></button>
             </div>
-            <div class="card" style="padding:0"><div class="table-container"><table class="data-table"><thead><tr><th></th><th>Asset</th><th>Price</th><th>24h</th><th>7d</th><th>Market Cap</th><th>7d Trend</th></tr></thead><tbody>\${rows}</tbody></table></div></div>
-        </div>\`;
+            <div class="card" style="padding:0"><div class="table-container"><table class="data-table"><thead><tr><th></th><th>Asset</th><th>Price</th><th>24h</th><th>7d</th><th>Market Cap</th><th>7d Trend</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+        </div>`;
     },
     
     stocks: () => {
-        let cards = AppState.stockData.map(s => \`
-            <div class="card stat-card cyber-glow" style="cursor:pointer" onclick="showStockDetails('\${s.symbol}')">
+        let cards = AppState.stockData.map(s => `
+            <div class="card stat-card cyber-glow" style="cursor:pointer" onclick="showStockDetails('${s.symbol}')">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px">
-                    <div><div style="font-size:18px; font-weight:700; font-family:var(--font-heading)">\${s.symbol}</div><div style="font-size:12px; color:var(--text-muted)">\${s.name}</div></div>
-                    <span class="badge \${getChangeClass(s.changePercent)}">\${formatPercent(s.changePercent)}</span>
+                    <div><div style="font-size:18px; font-weight:700; font-family:var(--font-heading)">${s.symbol}</div><div style="font-size:12px; color:var(--text-muted)">${s.name}</div></div>
+                    <span class="badge ${getChangeClass(s.changePercent)}">${formatPercent(s.changePercent)}</span>
                 </div>
-                <div style="font-size:28px; font-weight:700; font-family:var(--font-heading); margin-bottom:16px">\${formatMoney(s.price)}</div>
-                <canvas id="sp-st-\${s.symbol}" width="200" height="50" style="width:100%; height:50px"></canvas>
+                <div style="font-size:28px; font-weight:700; font-family:var(--font-heading); margin-bottom:16px">${formatMoney(s.price)}</div>
+                <canvas id="sp-st-${s.symbol}" width="200" height="50" style="width:100%; height:50px"></canvas>
             </div>
-        \`).join('');
-        return \`<div class="stagger-1"><div class="card" style="margin-bottom:24px; padding:16px 24px; background:var(--warning-dim); border-color:var(--warning); display:flex; align-items:center; gap:12px"><i class="fas fa-info-circle" style="color:var(--warning); font-size:20px"></i><div style="font-size:14px; color:var(--text-primary)">Stock data is currently running in <strong>Live Simulation</strong> mode. Real API integration requires an AlphaVantage key.</div></div><div class="grid-cols-4">\${cards}</div></div>\`;
+        `).join('');
+        return `<div class="stagger-1"><div class="card" style="margin-bottom:24px; padding:16px 24px; background:var(--warning-dim); border-color:var(--warning); display:flex; align-items:center; gap:12px"><i class="fas fa-info-circle" style="color:var(--warning); font-size:20px"></i><div style="font-size:14px; color:var(--text-primary)">Stock data is currently running in <strong>Live Simulation</strong> mode. Real API integration requires an AlphaVantage key.</div></div><div class="grid-cols-4">${cards}</div></div>`;
     },
     
     budget: () => {
@@ -459,91 +459,91 @@ const Views = {
         let txRows = b.transactions.slice().reverse().map(t => {
             const cat = Categories[t.category] || Categories.other;
             const isInc = t.type === 'in';
-            return \`<tr><td><span class="badge \${isInc ? 'positive' : 'negative'}">\${isInc ? 'Income' : 'Expense'}</span></td><td><div style="display:flex; align-items:center; gap:8px"><i class="fas \${cat.icon}" style="color:\${cat.color}"></i> \${cat.label}</div></td><td style="font-weight:500">\${t.desc}</td><td style="color:var(--text-muted)">\${t.date}</td><td style="font-weight:600; color:\${isInc ? Colors.success : 'var(--text-primary)'}">\${isInc ? '+' : '-'}\${formatMoney(t.amount)}</td><td style="text-align:right"><button class="btn-icon" onclick="deleteTransaction(\${t.id})" style="color:var(--danger)"><i class="fas fa-trash"></i></button></td></tr>\`;
+            return `<tr><td><span class="badge ${isInc ? 'positive' : 'negative'}">${isInc ? 'Income' : 'Expense'}</span></td><td><div style="display:flex; align-items:center; gap:8px"><i class="fas ${cat.icon}" style="color:${cat.color}"></i> ${cat.label}</div></td><td style="font-weight:500">${t.desc}</td><td style="color:var(--text-muted)">${t.date}</td><td style="font-weight:600; color:${isInc ? Colors.success : 'var(--text-primary)'}">${isInc ? '+' : '-'}${formatMoney(t.amount)}</td><td style="text-align:right"><button class="btn-icon" onclick="deleteTransaction(${t.id})" style="color:var(--danger)"><i class="fas fa-trash"></i></button></td></tr>`;
         }).join('');
 
-        const expOpts = ExpenseCategories.map(c => \`<option value="\${c[0]}">\${c[1].label}</option>\`).join('');
+        const expOpts = ExpenseCategories.map(c => `<option value="${c[0]}">${c[1].label}</option>`).join('');
 
-        return \`
+        return `
         <div>
             <div class="grid-cols-4 stagger-1" style="margin-bottom:24px">
-                <div class="card stat-card sc-green"><div class="sc-label">Total Income</div><div class="sc-value">\${formatMoney(inc)}</div></div>
-                <div class="card stat-card sc-orange"><div class="sc-label">Total Spent</div><div class="sc-value">\${formatMoney(spent)}</div></div>
-                <div class="card stat-card \${remain >= 0 ? 'sc-blue' : 'sc-green'}"><div class="sc-label">Remaining Budget</div><div class="sc-value" style="color:\${remain < 0 ? Colors.danger : 'inherit'}">\${formatMoney(remain)}</div></div>
-                <div class="card stat-card sc-purple"><div class="sc-label">Budget Used</div><div class="sc-value">\${pct.toFixed(1)}%</div><div class="progress-bg"><div class="progress-fill" style="width:\${pct}%; background:\${pct > 90 ? Colors.danger : Colors.success}"></div></div></div>
+                <div class="card stat-card sc-green"><div class="sc-label">Total Income</div><div class="sc-value">${formatMoney(inc)}</div></div>
+                <div class="card stat-card sc-orange"><div class="sc-label">Total Spent</div><div class="sc-value">${formatMoney(spent)}</div></div>
+                <div class="card stat-card ${remain >= 0 ? 'sc-blue' : 'sc-green'}"><div class="sc-label">Remaining Budget</div><div class="sc-value" style="color:${remain < 0 ? Colors.danger : 'inherit'}">${formatMoney(remain)}</div></div>
+                <div class="card stat-card sc-purple"><div class="sc-label">Budget Used</div><div class="sc-value">${pct.toFixed(1)}%</div><div class="progress-bg"><div class="progress-fill" style="width:${pct}%; background:${pct > 90 ? Colors.danger : Colors.success}"></div></div></div>
             </div>
             
             <div class="grid-cols-3-2 stagger-2" style="margin-bottom:24px">
                 <div class="card" style="padding:0">
                     <div style="padding:24px; border-bottom:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center">
                         <h3 style="font-size:16px">Transaction History</h3>
-                        <div style="display:flex; align-items:center; gap:12px"><span style="font-size:13px; color:var(--text-muted)">Limit:</span><input type="number" id="bud-limit" class="input-field" value="\${b.limit}" style="width:100px; padding:6px 12px" onchange="updateLimit(this.value)"></div>
+                        <div style="display:flex; align-items:center; gap:12px"><span style="font-size:13px; color:var(--text-muted)">Limit:</span><input type="number" id="bud-limit" class="input-field" value="${b.limit}" style="width:100px; padding:6px 12px" onchange="updateLimit(this.value)"></div>
                     </div>
-                    <div class="table-container"><table class="data-table"><thead><tr><th>Type</th><th>Category</th><th>Description</th><th>Date</th><th>Amount</th><th></th></tr></thead><tbody>\${txRows || '<tr><td colspan="6" style="text-align:center; padding:40px">No transactions</td></tr>'}</tbody></table></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Type</th><th>Category</th><th>Description</th><th>Date</th><th>Amount</th><th></th></tr></thead><tbody>${txRows || '<tr><td colspan="6" style="text-align:center; padding:40px">No transactions</td></tr>'}</tbody></table></div>
                 </div>
                 <div class="card">
                     <h3 style="font-size:16px; margin-bottom:20px">Add Transaction</h3>
                     <div class="input-group"><label class="input-label">Type</label><select id="add-type" class="input-field" onchange="updateCatOptions()"><option value="ex">Expense</option><option value="in">Income</option></select></div>
-                    <div class="input-group"><label class="input-label">Category</label><select id="add-cat" class="input-field">\${expOpts}</select></div>
+                    <div class="input-group"><label class="input-label">Category</label><select id="add-cat" class="input-field">${expOpts}</select></div>
                     <div class="input-group"><label class="input-label">Description</label><input type="text" id="add-desc" class="input-field" placeholder="E.g., Groceries"></div>
-                    <div class="grid-cols-2" style="gap:16px"><div class="input-group"><label class="input-label">Amount</label><input type="number" id="add-amount" class="input-field" placeholder="0.00" step="0.01"></div><div class="input-group"><label class="input-label">Date</label><input type="date" id="add-date" class="input-field" value="\${new Date().toISOString().split('T')[0]}"></div></div>
+                    <div class="grid-cols-2" style="gap:16px"><div class="input-group"><label class="input-label">Amount</label><input type="number" id="add-amount" class="input-field" placeholder="0.00" step="0.01"></div><div class="input-group"><label class="input-label">Date</label><input type="date" id="add-date" class="input-field" value="${new Date().toISOString().split('T')[0]}"></div></div>
                     <button class="btn btn-primary" style="width:100%; margin-top:8px" onclick="addTransaction()"><i class="fas fa-plus"></i> Add Transaction</button>
                 </div>
             </div>
-        </div>\`;
+        </div>`;
     },
 
     goals: () => {
         let cards = AppState.goals.map(g => {
             const pct = Math.min(100, (g.current / g.target) * 100);
-            return \`
+            return `
             <div class="card cyber-glow">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
                     <div style="display:flex; align-items:center; gap:12px">
-                        <div style="width:40px; height:40px; border-radius:10px; background:\${g.color}15; color:\${g.color}; display:flex; align-items:center; justify-content:center; font-size:16px"><i class="fas \${g.icon}"></i></div>
-                        <h3 style="font-size:16px; margin:0">\${g.name}</h3>
+                        <div style="width:40px; height:40px; border-radius:10px; background:${g.color}15; color:${g.color}; display:flex; align-items:center; justify-content:center; font-size:16px"><i class="fas ${g.icon}"></i></div>
+                        <h3 style="font-size:16px; margin:0">${g.name}</h3>
                     </div>
-                    <button class="btn-icon" onclick="deleteGoal(\${g.id})" style="color:var(--danger)"><i class="fas fa-trash"></i></button>
+                    <button class="btn-icon" onclick="deleteGoal(${g.id})" style="color:var(--danger)"><i class="fas fa-trash"></i></button>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-family:var(--font-heading); font-size:20px; font-weight:700; margin-bottom:8px">
-                    <span>\${formatMoney(g.current)}</span><span style="color:var(--text-muted)">\${formatMoney(g.target)}</span>
+                    <span>${formatMoney(g.current)}</span><span style="color:var(--text-muted)">${formatMoney(g.target)}</span>
                 </div>
-                <div class="progress-bg" style="height:8px; margin-bottom:8px"><div class="progress-fill" style="width:\${pct}%; background:\${g.color}"></div></div>
-                <div style="text-align:right; font-size:12px; font-weight:600; color:\${g.color}">\${pct.toFixed(1)}% Completed</div>
-            </div>\`;
+                <div class="progress-bg" style="height:8px; margin-bottom:8px"><div class="progress-fill" style="width:${pct}%; background:${g.color}"></div></div>
+                <div style="text-align:right; font-size:12px; font-weight:600; color:${g.color}">${pct.toFixed(1)}% Completed</div>
+            </div>`;
         }).join('');
 
-        return \`
+        return `
         <div class="stagger-1">
             <div class="card" style="margin-bottom:24px; padding:24px; display:flex; justify-content:space-between; align-items:center">
                 <div><h2 style="font-size:20px; margin-bottom:4px">Financial Goals</h2><p style="color:var(--text-muted); font-size:14px">Track your savings targets.</p></div>
                 <button class="btn btn-primary" onclick="showAddGoalModal()"><i class="fas fa-plus"></i> New Goal</button>
             </div>
-            <div class="grid-cols-3">\${cards || '<div class="card" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted)">No goals set yet.</div>'}</div>
-        </div>\`;
+            <div class="grid-cols-3">${cards || '<div class="card" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted)">No goals set yet.</div>'}</div>
+        </div>`;
     },
     
     analytics: () => {
-        return \`
+        return `
         <div class="stagger-1">
             <div class="grid-cols-2" style="margin-bottom:24px">
                 <div class="card"><h3 style="font-size:16px; margin-bottom:20px">Spending by Category</h3><div style="height:300px"><canvas id="an-donut"></canvas></div></div>
                 <div class="card"><h3 style="font-size:16px; margin-bottom:20px">6-Month Trend</h3><div style="height:300px"><canvas id="an-bar"></canvas></div></div>
             </div>
-        </div>\`;
+        </div>`;
     },
     
     fx: () => {
         if(!AppState.rates) return '<div class="stagger-1 card" style="text-align:center; padding:60px">Loading Rates...</div>';
-        const opts = Object.keys(AppState.rates).sort().map(c => \`<option value="\${c}">\${c}</option>\`).join('');
-        return \`
+        const opts = Object.keys(AppState.rates).sort().map(c => `<option value="${c}">${c}</option>`).join('');
+        return `
         <div class="stagger-1" style="max-width:600px; margin:0 auto">
             <div class="card cyber-glow">
                 <h3 style="font-size:20px; text-align:center; margin-bottom:32px">Currency Converter</h3>
                 <div style="display:flex; align-items:flex-end; gap:16px; margin-bottom:24px">
-                    <div style="flex:1"><label class="input-label">From</label><select id="fx-from" class="input-field" onchange="calcFx()"><option value="USD" selected>USD</option>\${opts}</select></div>
+                    <div style="flex:1"><label class="input-label">From</label><select id="fx-from" class="input-field" onchange="calcFx()"><option value="USD" selected>USD</option>${opts}</select></div>
                     <button class="btn btn-secondary" style="height:42px; width:42px; padding:0; border-radius:50%" onclick="swapFx()"><i class="fas fa-exchange-alt"></i></button>
-                    <div style="flex:1"><label class="input-label">To</label><select id="fx-to" class="input-field" onchange="calcFx()"><option value="EUR" selected>EUR</option>\${opts}</select></div>
+                    <div style="flex:1"><label class="input-label">To</label><select id="fx-to" class="input-field" onchange="calcFx()"><option value="EUR" selected>EUR</option>${opts}</select></div>
                 </div>
                 <div class="input-group"><label class="input-label">Amount</label><input type="number" id="fx-amount" class="input-field" value="100" style="font-size:24px; padding:16px" oninput="calcFx()"></div>
                 <div style="margin-top:32px; text-align:center; padding:32px; background:var(--bg-input); border-radius:var(--radius-md); border:1px solid var(--border-light)">
@@ -552,7 +552,7 @@ const Views = {
                     <div id="fx-rate" style="font-size:13px; color:var(--text-muted); margin-top:12px">1 USD = X EUR</div>
                 </div>
             </div>
-        </div>\`;
+        </div>`;
     }
 };
 
@@ -564,8 +564,8 @@ const PostRender = {
         renderDoughnut('dash-alloc', ['Crypto', 'Stocks', 'Cash'], [cryptoVal, stockVal, 10000], [Colors.success, Colors.primary, Colors.textMuted]);
         renderHealthGauge('health-gauge', calculateHealthScore());
     },
-    crypto: () => { AppState.cryptoData.forEach(c => { if(c.sparkline_in_7d && c.sparkline_in_7d.price) renderSparkline(\`sp-cr-\${c.id}\`, c.sparkline_in_7d.price, c.price_change_percentage_7d_in_currency >= 0); }); },
-    stocks: () => { AppState.stockData.forEach(s => renderSparkline(\`sp-st-\${s.symbol}\`, s.history, s.changePercent >= 0)); },
+    crypto: () => { AppState.cryptoData.forEach(c => { if(c.sparkline_in_7d && c.sparkline_in_7d.price) renderSparkline(`sp-cr-${c.id}`, c.sparkline_in_7d.price, c.price_change_percentage_7d_in_currency >= 0); }); },
+    stocks: () => { AppState.stockData.forEach(s => renderSparkline(`sp-st-${s.symbol}`, s.history, s.changePercent >= 0)); },
     budget: () => {}, goals: () => {},
     analytics: () => {
         let exps = {};
@@ -611,7 +611,7 @@ function toggleWatchlist(id) {
 
 function updateCatOptions() {
     const isInc = document.getElementById('add-type').value === 'in';
-    document.getElementById('add-cat').innerHTML = (isInc ? IncomeCategories : ExpenseCategories).map(c => \`<option value="\${c[0]}">\${c[1].label}</option>\`).join('');
+    document.getElementById('add-cat').innerHTML = (isInc ? IncomeCategories : ExpenseCategories).map(c => `<option value="${c[0]}">${c[1].label}</option>`).join('');
 }
 function addTransaction() {
     const desc = document.getElementById('add-desc').value.trim(), amount = parseFloat(document.getElementById('add-amount').value), type = document.getElementById('add-type').value, cat = document.getElementById('add-cat').value, date = document.getElementById('add-date').value;
@@ -624,7 +624,7 @@ function deleteTransaction(id) { AppState.budget.transactions = AppState.budget.
 function updateLimit(val) { const limit = parseFloat(val); if(limit > 0) { AppState.budget.limit = limit; saveBudget(); showToast('Budget limit updated', 'success'); renderView('budget'); } }
 
 function showAddGoalModal() {
-    openModal(\`
+    openModal(`
         <h2 style="font-size:20px; margin-bottom:20px">Create New Goal</h2>
         <div class="input-group"><label class="input-label">Goal Name</label><input type="text" id="g-name" class="input-field" placeholder="E.g., Vacation Fund"></div>
         <div class="grid-cols-2" style="gap:16px; margin-bottom:24px">
@@ -635,7 +635,7 @@ function showAddGoalModal() {
             <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
             <button class="btn btn-primary" onclick="addGoal()"><i class="fas fa-save"></i> Save Goal</button>
         </div>
-    \`);
+    `);
 }
 function addGoal() {
     const name = document.getElementById('g-name').value.trim(), target = parseFloat(document.getElementById('g-target').value), current = parseFloat(document.getElementById('g-current').value) || 0;
@@ -655,7 +655,7 @@ function calcFx() {
     const final = tv === 'USD' ? inUsd : inUsd * AppState.rates[tv];
     const rate = tv === 'USD' ? (1/AppState.rates[fv]) : (AppState.rates[tv]/(fv==='USD'?1:AppState.rates[fv]));
     document.getElementById('fx-result').textContent = formatMoney(final, tv==='JPY'||tv==='KRW'?0:2).replace('$', '') + ' ' + tv;
-    document.getElementById('fx-rate').textContent = \`1 \${fv} = \${rate.toFixed(4)} \${tv}\`;
+    document.getElementById('fx-rate').textContent = `1 ${fv} = ${rate.toFixed(4)} ${tv}`;
 }
 function swapFx() { const f = document.getElementById('fx-from'), t = document.getElementById('fx-to'), tmp = f.value; f.value = t.value; t.value = tmp; calcFx(); }
 
