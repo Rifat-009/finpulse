@@ -4,99 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>FinPulse — Premium Personal Finance Dashboard</title>
-    
-    <meta name="description" content="FinPulse is a premium, professional-grade personal finance dashboard tracking crypto, stocks, budget, and analytics in real-time.">
-    <meta name="keywords" content="finance, dashboard, crypto, stocks, budget, tracking, portfolio">
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2310b981'/><path d='M24 16v68' stroke='%23ffffff' stroke-width='16' stroke-linecap='round' fill='none'/><path d='M24 16h48' stroke='%23ffffff' stroke-width='16' stroke-linecap='round' fill='none'/><polyline points='24,50 38,50 48,30 58,70 68,50 76,50' stroke='%23ffffff' stroke-width='11' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
-    
+
+    <meta name="description" content="FinPulse is a premium, professional-grade personal finance dashboard tracking crypto, stocks, budget, goals, and analytics in real-time.">
+    <meta name="keywords" content="finance dashboard, crypto tracker, stock tracker, budget manager, personal finance, portfolio">
+    <meta name="theme-color" content="#020617">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="FinPulse — Premium Personal Finance Dashboard">
+    <meta property="og:description" content="Track crypto, stocks, budget and analytics in one powerful dashboard.">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2310b981'/><path d='M24 16v68' stroke='%23fff' stroke-width='16' stroke-linecap='round' fill='none'/><path d='M24 16h48' stroke='%23fff' stroke-width='16' stroke-linecap='round' fill='none'/><polyline points='24,50 38,50 48,30 58,70 68,50 76,50' stroke='%23fff' stroke-width='11' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="app-background"></div>
-    <div id="noise-overlay"></div>
+    <!-- Animated Background -->
+    <div id="app-background" aria-hidden="true"></div>
+    <div id="noise-overlay" aria-hidden="true"></div>
+    <div id="grid-overlay" aria-hidden="true"></div>
 
     <!-- Live Market News Ticker -->
-    <div id="news-ticker">
-        <div class="ticker-content" id="ticker-content">
-            <span><i class="fas fa-bolt" style="color:var(--warning)"></i> Loading Live Market News...</span>
+    <div id="news-ticker" role="marquee" aria-label="Live market news">
+        <div class="ticker-label"><i class="fas fa-bolt"></i> LIVE</div>
+        <div class="ticker-track">
+            <div class="ticker-content" id="ticker-content">
+                <span class="ticker-item"><i class="fas fa-circle-notch fa-spin"></i>&nbsp; Loading live market news...</span>
+            </div>
         </div>
     </div>
 
+    <!-- Sidebar -->
     <aside id="sidebar" role="navigation" aria-label="Main Navigation">
         <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
+            <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
             <span class="logo-text">Fin<span>Pulse</span></span>
         </div>
+
         <nav id="side-nav">
-            <a class="nav-item active" data-page="dash" role="button" tabindex="0">
+            <a class="nav-item active" data-page="dash" role="button" tabindex="0" aria-label="Dashboard">
                 <i class="fas fa-border-all"></i><span>Dashboard</span>
             </a>
-            <a class="nav-item" data-page="crypto" role="button" tabindex="0">
+            <a class="nav-item" data-page="crypto" role="button" tabindex="0" aria-label="Crypto Market">
                 <i class="fab fa-bitcoin"></i><span>Crypto Market</span>
             </a>
-            <a class="nav-item" data-page="stocks" role="button" tabindex="0">
-                <i class="fas fa-chart-line"></i><span>Stock Tracker</span>
+            <a class="nav-item" data-page="stocks" role="button" tabindex="0" aria-label="Stock Tracker">
+                <i class="fas fa-chart-candlestick"></i><span>Stock Tracker</span>
             </a>
-            <a class="nav-item" data-page="budget" role="button" tabindex="0">
+            <a class="nav-item" data-page="budget" role="button" tabindex="0" aria-label="Budget Manager">
                 <i class="fas fa-wallet"></i><span>Budget Manager</span>
             </a>
-            <a class="nav-item" data-page="goals" role="button" tabindex="0">
+            <a class="nav-item" data-page="goals" role="button" tabindex="0" aria-label="Financial Goals">
                 <i class="fas fa-bullseye"></i><span>Financial Goals</span>
             </a>
-            <a class="nav-item" data-page="analytics" role="button" tabindex="0">
+            <a class="nav-item" data-page="analytics" role="button" tabindex="0" aria-label="Analytics">
                 <i class="fas fa-chart-pie"></i><span>Analytics</span>
             </a>
-            <a class="nav-item" data-page="fx" role="button" tabindex="0">
-                <i class="fas fa-exchange-alt"></i><span>Converter</span>
+            <a class="nav-item" data-page="fx" role="button" tabindex="0" aria-label="Currency Converter">
+                <i class="fas fa-exchange-alt"></i><span>FX Converter</span>
             </a>
         </nav>
+
         <div id="sidebar-footer">
             <div class="status-indicator">
-                <span class="pulse-dot"></span>
+                <span class="pulse-dot" id="pulse-dot"></span>
                 <span id="status-text">Connecting...</span>
             </div>
+            <div id="update-time" class="update-time">—</div>
         </div>
     </aside>
 
+    <!-- Main Wrapper -->
     <div id="main-wrapper">
-        <header id="top-bar">
+        <!-- Top Header Bar -->
+        <header id="top-bar" role="banner">
             <div class="header-left">
-                <button id="mobile-menu-btn" aria-label="Toggle Menu">
+                <button id="mobile-menu-btn" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1 id="page-title">Dashboard</h1>
             </div>
             <div class="header-right">
-                <span id="update-time" class="hide-mobile"></span>
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff&rounded=true" alt="User Profile">
+                <span id="header-time" class="hide-mobile"></span>
+                <button class="header-btn hide-mobile" id="ai-trigger-btn" onclick="openAiSidebar()" aria-label="Open AI Insights">
+                    <i class="fas fa-brain"></i> AI Insights
+                </button>
+                <div class="user-profile" title="User Profile">
+                    <img src="https://ui-avatars.com/api/?name=FP+User&background=10b981&color=fff&rounded=true&size=64" alt="User avatar" width="36" height="36">
                 </div>
             </div>
         </header>
 
-        <main id="main-content">
-            <!-- Dynamic content will be injected here -->
+        <!-- Main Content Area -->
+        <main id="main-content" role="main">
+            <!-- Loading spinner shown before JS initialises -->
+            <div id="loading-screen">
+                <div class="loader-ring"></div>
+                <p>Initializing FinPulse...</p>
+            </div>
         </main>
     </div>
 
     <!-- AI Insights Sidebar -->
-    <div id="ai-sidebar-overlay" onclick="closeAiSidebar()"></div>
-    <aside id="ai-sidebar">
+    <div id="ai-sidebar-overlay" onclick="closeAiSidebar()" aria-hidden="true"></div>
+    <aside id="ai-sidebar" aria-label="AI Insights Panel">
         <div class="ai-header">
             <div class="ai-title">
-                <i class="fas fa-brain" style="color:var(--accent-primary)"></i> Pulse AI Insights
+                <span class="ai-dot"></span>
+                <i class="fas fa-brain" style="color:var(--accent-primary)"></i>
+                Pulse AI Insights
             </div>
-            <button class="btn-icon" onclick="closeAiSidebar()"><i class="fas fa-times"></i></button>
+            <button class="btn-icon" onclick="closeAiSidebar()" aria-label="Close AI panel">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div id="ai-content">
             <!-- Insights injected here -->
@@ -105,27 +138,37 @@
 
     <!-- AI Floating Action Button -->
     <button id="fab-ai" onclick="openAiSidebar()" aria-label="Open AI Insights">
-        <i class="fas fa-sparkles"></i>
+        <i class="fas fa-brain"></i>
     </button>
 
     <!-- Modal Overlay -->
-    <div id="modal-overlay">
+    <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div id="modal-content"></div>
     </div>
 
     <!-- Toast Notifications -->
-    <div id="toast-container" aria-live="polite"></div>
+    <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-    <!-- Bottom Navigation for Mobile -->
+    <!-- Mobile Bottom Navigation -->
     <nav id="bottom-nav" aria-label="Mobile Navigation">
-        <button class="bnav-item active" data-page="dash"><i class="fas fa-border-all"></i><span>Home</span></button>
-        <button class="bnav-item" data-page="crypto"><i class="fab fa-bitcoin"></i><span>Crypto</span></button>
-        <button class="bnav-item" data-page="stocks"><i class="fas fa-chart-line"></i><span>Stocks</span></button>
-        <button class="bnav-item" data-page="budget"><i class="fas fa-wallet"></i><span>Budget</span></button>
-        <button class="bnav-item" data-page="analytics"><i class="fas fa-chart-pie"></i><span>Stats</span></button>
+        <button class="bnav-item active" data-page="dash" aria-label="Dashboard">
+            <i class="fas fa-border-all"></i><span>Home</span>
+        </button>
+        <button class="bnav-item" data-page="crypto" aria-label="Crypto">
+            <i class="fab fa-bitcoin"></i><span>Crypto</span>
+        </button>
+        <button class="bnav-item" data-page="stocks" aria-label="Stocks">
+            <i class="fas fa-chart-line"></i><span>Stocks</span>
+        </button>
+        <button class="bnav-item" data-page="budget" aria-label="Budget">
+            <i class="fas fa-wallet"></i><span>Budget</span>
+        </button>
+        <button class="bnav-item" data-page="analytics" aria-label="Analytics">
+            <i class="fas fa-chart-pie"></i><span>Stats</span>
+        </button>
     </nav>
 
-    <!-- Application Logic -->
-    <script src="js/app.js"></script>
+    <!-- Application Logic (defer to ensure DOM is ready) -->
+    <script src="js/app.js" defer></script>
 </body>
 </html>
